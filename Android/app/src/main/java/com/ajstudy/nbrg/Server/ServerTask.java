@@ -1,9 +1,21 @@
 package com.ajstudy.nbrg.Server;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class ServerTask<T> extends AsyncTask<RequestObject,ProgressObject,ResultObject<T>> {
 
+    String TAG = "SERVER_TASK";
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -17,7 +29,47 @@ public class ServerTask<T> extends AsyncTask<RequestObject,ProgressObject,Result
 
     @Override
     protected ResultObject<T> doInBackground(RequestObject... requestObjects) {
-        return null;
+        String urlBody = "www.naver.com";
+
+        try{
+
+            URL url = new URL(urlBody);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            ResultObject<T> resultObject = new ResultObject<>(connection.getResponseMessage(),connection.getResponseCode());
+
+            String result = "";
+            InputStream is;
+            InputStreamReader isr;
+
+
+            Gson gson = new Gson();
+
+            if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+                is = connection.getInputStream();
+                isr = new InputStreamReader(is);
+                Type nameType = new TypeToken<T>(){}.getType();
+                resultObject.setResult((T)gson.fromJson(urlBody,nameType));
+
+            }else{
+                is = connection.getErrorStream();
+                isr = new InputStreamReader(is);
+
+                Type nameType = new TypeToken<ResultObject<String>>(){}.getType();
+                resultObject = gson.fromJson(result,nameType);
+
+            }
+            /*TO-DO: 반복문을 통해서 결과 String 을 받아서 result에 넣기*/
+
+            gson.fromJson(result,ResultObject.class);
+
+            return resultObject;
+        }catch (IOException e){
+            e.printStackTrace();
+            Log.e(TAG,e.toString());
+
+            ResultObject<T> resultObject = new ResultObject<>(e.getMessage(),800);
+            return resultObject;
+        }
     }
 
     @Override
