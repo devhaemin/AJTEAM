@@ -1,4 +1,6 @@
-package com.ajstudy.nbrg;
+package com.ajstudy.nbrg.Region;
+
+import com.ajstudy.nbrg.Region.Region;
 
 public class RegularRegion extends Region {
     String parentCode;

@@ -1,4 +1,4 @@
-package com.ajstudy.nbrg;
+package com.ajstudy.nbrg.Region;
 
 public class Region {
     String regionName;
