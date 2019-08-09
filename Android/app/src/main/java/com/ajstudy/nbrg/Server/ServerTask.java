@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,8 +48,23 @@ public class ServerTask<T> extends AsyncTask<RequestObject,ProgressObject,Result
             if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
                 is = connection.getInputStream();
                 isr = new InputStreamReader(is);
+
+                StringBuffer stringbuffer = new StringBuffer();
+
+
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line+ "\n");
+                }
+
+                result = builder.toString();
+
+
                 Type nameType = new TypeToken<T>(){}.getType();
-                resultObject.setResult((T)gson.fromJson(urlBody,nameType));
+                resultObject.setResult((T)gson.fromJson(result,nameType));
 
             }else{
                 is = connection.getErrorStream();
