@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">NBRG</string>
+    <string name="app_name">눈바래기</string>
+    <string name="selection_guide_msg">검색할 지역을 선택해주세요.</string>
 </resources>
