@@ -49,18 +49,15 @@ public class ServerTask<T> extends AsyncTask<RequestObject,ProgressObject,Result
                 is = connection.getInputStream();
                 isr = new InputStreamReader(is);
 
-                StringBuffer stringbuffer = new StringBuffer();
-
-
-                StringBuilder builder = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                StringBuilder stringBuilder = new StringBuilder();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
                 String line;
 
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line+ "\n");
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line+ "\n");
                 }
 
-                result = builder.toString();
+                result = stringBuilder.toString();
 
 
                 Type nameType = new TypeToken<T>(){}.getType();
@@ -69,6 +66,16 @@ public class ServerTask<T> extends AsyncTask<RequestObject,ProgressObject,Result
             }else{
                 is = connection.getErrorStream();
                 isr = new InputStreamReader(is);
+
+                StringBuilder stringBuilder = new StringBuilder();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line+ "\n");
+                }
+
+                result = stringBuilder.toString();
 
                 Type nameType = new TypeToken<ResultObject<String>>(){}.getType();
                 resultObject = gson.fromJson(result,nameType);
